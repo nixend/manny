@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author panyox
@@ -21,5 +20,5 @@ public class MethodData implements Serializable {
     private String name;
     private String path;
     private String httpMethod;
-    private Map<String, String> parameters;
+    private MethodParam parameters;
 }

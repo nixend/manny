@@ -2,6 +2,7 @@ package com.nixend.manny.server.dubbo;
 
 import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.model.RouteData;
+import com.nixend.manny.common.utils.JsonUtils;
 import com.nixend.manny.core.ParamResolveService;
 import com.nixend.manny.core.RouterHandler;
 import com.nixend.manny.core.exception.MannyException;
@@ -43,12 +44,15 @@ public class DubboRouterHandler implements RouterHandler {
         RouteData routeData = exchange.getAttribute(Constants.ROUTE_DATA);
 
         Pair<String[], Object[]> pair = paramResolveService.buildParameter(params, routeData.getMethod().getParameters());
+        //log.info("params: {} left: {} right: {}", params, pair.getLeft(), pair.getRight());
         return Mono.defer(() -> {
             Object result;
             try {
                 Object res = doInvoke(pair, routeData);
                 result = responseBuilder.success(res);
+                result = JsonUtils.removeClass(result);
             } catch (Exception ex) {
+                log.error("invoke error: {}", ex.getMessage());
                 result = responseBuilder.error(new MannyException(ResponseCode.INVOKE_ERROR));
             }
             return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(result));

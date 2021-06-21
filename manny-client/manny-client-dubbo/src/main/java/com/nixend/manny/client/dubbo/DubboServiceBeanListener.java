@@ -3,6 +3,7 @@ package com.nixend.manny.client.dubbo;
 import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.enums.RpcType;
 import com.nixend.manny.common.model.MethodData;
+import com.nixend.manny.common.model.MethodParam;
 import com.nixend.manny.common.model.RouteData;
 import com.nixend.manny.common.model.ServiceData;
 import com.nixend.manny.common.thread.TaskExecutor;
@@ -19,8 +20,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -87,14 +86,14 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
                         throw new IllegalArgumentException("Method path is invalid in Service: " + serviceBean.getInterface() + " method: " + method.getName());
                     }
                     String path = PathUtils.clearPath(route.value());
-                    LinkedHashMap<String, String> parameters = resolveMethodParameters(method);
+                    MethodParam parameters = MethodParam.parse(method);
                     MethodData methodData = MethodData.builder()
                             .id(path)
                             .serviceId(serviceId)
                             .name(method.getName())
                             .path(path)
-                            .httpMethod(route.method().name())
                             .parameters(parameters)
+                            .httpMethod(route.method().name())
                             .build();
                     RouteData routeData = RouteData.builder()
                             .service(serviceData)
@@ -104,18 +103,5 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
                 }
             }
         }
-    }
-
-    private LinkedHashMap<String, String> resolveMethodParameters(Method method) {
-        int paramCount = method.getParameterCount();
-        Parameter[] parameters = method.getParameters();
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        for (int i = 0; i < paramCount; i++) {
-            Parameter parameter = parameters[i];
-            params.put(parameter.getName(), parameter.getType().getName());
-            log.info("name: {} type: {}", parameter.getName(), parameter.getType().getName());
-        }
-        log.info("p: {}", params);
-        return params;
     }
 }
