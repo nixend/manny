@@ -5,11 +5,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -46,13 +44,5 @@ public class RouterDispatcherHandler implements HandlerFunction<ServerResponse>,
                 .next()
                 .flatMap((handler) -> handler.handle(exchange));
     }
-
-    private <R> Mono<R> createNotFoundError() {
-        return Mono.defer(() -> {
-            Exception ex = new ResponseStatusException(HttpStatus.NOT_FOUND, "No matching handler");
-            return Mono.error(ex);
-        });
-    }
-
 
 }
