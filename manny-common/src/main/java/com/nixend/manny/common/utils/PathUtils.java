@@ -14,12 +14,7 @@ import java.util.stream.Collectors;
 public class PathUtils {
 
     /**
-     * orders
-     * v1/order/detail/89iu/ko
-     * order/create
-     * v1/order/create
-     * v1/order /index
-     * <p>
+     * eg.
      * v1/login/index   ->  v1/login/index
      * v1/login         ->  v1/login/index
      * login            ->  v1/login/index
