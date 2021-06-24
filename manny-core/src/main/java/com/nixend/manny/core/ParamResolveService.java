@@ -10,4 +10,6 @@ public interface ParamResolveService {
 
     Pair<String[], Object[]> buildParameter(String body, MethodParam methodParam);
 
+    Pair<String[], Object[]> buildParameter(String body, MethodParam methodParam, Object authInfo);
+    
 }

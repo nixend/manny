@@ -1,12 +1,15 @@
 package com.nixend.manny.common.auth;
 
-import java.io.Serializable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author panyox
  */
-public interface Identity extends Serializable {
-
-    Object getIdentity();
-
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Identity {
+    String value() default "";
 }

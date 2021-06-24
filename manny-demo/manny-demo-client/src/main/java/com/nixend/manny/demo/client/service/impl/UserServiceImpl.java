@@ -1,5 +1,6 @@
 package com.nixend.manny.demo.client.service.impl;
 
+import com.nixend.manny.common.auth.Identity;
 import com.nixend.manny.core.annotation.GetRoute;
 import com.nixend.manny.core.annotation.PostRoute;
 import com.nixend.manny.core.annotation.RequestRoute;
@@ -41,16 +42,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @PostRoute("/createById")
-    public User createById(User user, Integer userId) {
-        user.setId(userId);
+    public User createById(@Identity("id") User user) {
+        return user;
+    }
+
+    @Override
+    @PostRoute("create2")
+    public User create2(@Identity("id") User user, String name) {
+        user.setName(name);
         return user;
     }
 
     @Override
     @GetRoute("/info")
-    public User info(Integer loginId) {
+    public User info(@Identity Integer userId) {
         User user = new User();
-        user.setId(loginId);
+        user.setId(userId);
         return user;
     }
+
+    @Override
+    @GetRoute("info1")
+    public User info1(Integer loginId, @Identity String name) {
+        User user = new User();
+        user.setId(loginId);
+        user.setName(name);
+        return user;
+    }
+
+
 }

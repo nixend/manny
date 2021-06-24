@@ -58,7 +58,7 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
         }
         String servicePath = requestRoute.value();
         if (!StringUtils.hasLength(servicePath)) {
-            throw new IllegalArgumentException("RequestRoute value is null in Service: " + serviceBean.getInterface());
+            throw new IllegalArgumentException("RequestRoute value can not empty in Service: " + serviceBean.getInterface());
         }
         String version = requestRoute.version();
         if (!PathUtils.checkVersion(version)) {

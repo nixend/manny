@@ -5,8 +5,11 @@ package com.nixend.manny.common.constant;
  */
 public interface Constants {
     String SLASH = "/";
+    String DASH = "-";
     String DOT = ".";
     String MARK = ",";
+    String AT = "@";
+
     String ROUTER_PARAMS = "routerParams";
     String SERVICE_DATA = "serviceData";
     String METHOD_DATA = "methodData";
@@ -19,4 +22,7 @@ public interface Constants {
     String DEFAULT_INDEX = "index";
 
     String DUBBO_SERVICE_PATH = "/manny/dubbo/services";
+
+    String AN_ID = "@ID";
+    String AN_PA = "@PA";
 }

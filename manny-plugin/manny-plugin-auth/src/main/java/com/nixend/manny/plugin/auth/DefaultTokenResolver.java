@@ -1,6 +1,5 @@
 package com.nixend.manny.plugin.auth;
 
-import com.nixend.manny.common.auth.AuthInfo;
 import com.nixend.manny.common.utils.JwtUtils;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -56,12 +55,8 @@ public class DefaultTokenResolver implements TokenResolver {
     }
 
     @Override
-    public Mono<AuthInfo> getAuthInfo(String token) {
+    public Mono<Object> getAuthInfo(String token) {
         String id = JwtUtils.parseToken(token);
-        if (id == null) {
-            return Mono.empty();
-        }
-        AuthInfo info = new AuthInfo(id);
-        return Mono.just(info);
+        return Mono.justOrEmpty(id);
     }
 }

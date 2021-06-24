@@ -16,11 +16,11 @@ import reactor.core.publisher.Mono;
  * @author panyox
  */
 @Order(-2)
-public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler {
+public class DefaultGlobalExceptionHandler implements ErrorWebExceptionHandler {
 
     private ResponseBuilder responseBuilder;
 
-    public GlobalErrorWebExceptionHandler(final ResponseBuilder responseBuilder) {
+    public DefaultGlobalExceptionHandler(final ResponseBuilder responseBuilder) {
         this.responseBuilder = responseBuilder;
     }
 
@@ -28,6 +28,7 @@ public class GlobalErrorWebExceptionHandler implements ErrorWebExceptionHandler 
     public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
         DataBufferFactory bufferFactory = exchange.getResponse().bufferFactory();
         ServerHttpResponse response = exchange.getResponse();
+        throwable.printStackTrace();
         Object result = responseBuilder.error(throwable);
         String res = JSON.toJSONString(result);
         DataBuffer dataBuffer = bufferFactory.wrap(res.getBytes());

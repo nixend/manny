@@ -1,6 +1,9 @@
 package com.nixend.manny.common.model;
 
+import com.nixend.manny.common.auth.Identity;
 import com.nixend.manny.common.constant.Constants;
+import com.nixend.manny.common.enums.ParamAnnotation;
+import com.nixend.manny.common.utils.StringUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,7 +43,18 @@ public class MethodParam implements Serializable {
         List<String> types = new LinkedList<>();
         Parameter[] parameters = method.getParameters();
         Arrays.stream(parameters).forEach(parameter -> {
-            names.add(parameter.getName());
+            Identity ide = parameter.getAnnotation(Identity.class);
+            if (ide != null) {
+                String name = "";
+                if (StringUtils.hasLength(ide.value())) {
+                    name = String.format("%s@%s-%s", parameter.getName(), ParamAnnotation.IDENTITY.getName(), ide.value());
+                } else {
+                    name = String.format("%s@%s", parameter.getName(), ParamAnnotation.IDENTITY.getName());
+                }
+                names.add(name);
+            } else {
+                names.add(parameter.getName());
+            }
             types.add(parameter.getType().getName());
         });
         MethodParam methodParam = new MethodParam();

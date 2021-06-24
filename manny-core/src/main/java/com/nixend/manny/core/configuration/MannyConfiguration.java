@@ -1,7 +1,7 @@
 package com.nixend.manny.core.configuration;
 
 import com.nixend.manny.core.RouterDispatcherHandler;
-import com.nixend.manny.core.exception.GlobalErrorWebExceptionHandler;
+import com.nixend.manny.core.exception.DefaultGlobalExceptionHandler;
 import com.nixend.manny.core.filter.DataFilter;
 import com.nixend.manny.core.response.DefaultResponseBuilder;
 import com.nixend.manny.core.response.ResponseBuilder;
@@ -42,7 +42,7 @@ public class MannyConfiguration {
     }
 
     @Bean
-    public GlobalErrorWebExceptionHandler globalErrorWebExceptionHandler(final ResponseBuilder responseBuilder) {
-        return new GlobalErrorWebExceptionHandler(responseBuilder);
+    public DefaultGlobalExceptionHandler globalErrorWebExceptionHandler(final ResponseBuilder responseBuilder) {
+        return new DefaultGlobalExceptionHandler(responseBuilder);
     }
 }

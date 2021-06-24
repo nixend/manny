@@ -42,9 +42,15 @@ public class DubboRouterHandler implements RouterHandler {
     public Mono<ServerResponse> handle(ServerWebExchange exchange) {
         String params = exchange.getAttribute(Constants.ROUTER_PARAMS);
         RouteData routeData = exchange.getAttribute(Constants.ROUTE_DATA);
-
-        Pair<String[], Object[]> pair = paramResolveService.buildParameter(params, routeData.getMethod().getParameters());
-        //log.info("params: {} left: {} right: {}", params, pair.getLeft(), pair.getRight());
+        Object authInfo = exchange.getAttribute(Constants.AUTH_INFO);
+        Pair<String[], Object[]> pair;
+        log.info("authInfo: {}", authInfo);
+        if (Objects.nonNull(authInfo)) {
+            pair = paramResolveService.buildParameter(params, routeData.getMethod().getParameters(), authInfo);
+        } else {
+            pair = paramResolveService.buildParameter(params, routeData.getMethod().getParameters());
+        }
+        log.info("params: {} left: {} right: {}", params, pair.getLeft(), pair.getRight());
         return Mono.defer(() -> {
             Object result;
             try {

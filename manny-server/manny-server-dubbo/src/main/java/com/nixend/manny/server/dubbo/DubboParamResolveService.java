@@ -14,4 +14,10 @@ public class DubboParamResolveService implements ParamResolveService {
     public Pair<String[], Object[]> buildParameter(String body, MethodParam methodParam) {
         return ParamUtils.buildParameters(body, methodParam);
     }
+
+    @Override
+    public Pair<String[], Object[]> buildParameter(String body, MethodParam methodParam, Object authInfo) {
+        return ParamUtils.buildParameters(body, methodParam, authInfo);
+    }
+
 }
