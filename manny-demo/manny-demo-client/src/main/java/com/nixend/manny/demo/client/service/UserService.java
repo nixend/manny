@@ -14,5 +14,8 @@ public interface UserService {
     User create(User user);
 
     User findByIdAndName(Integer id, String name);
-    
+
+    User createById(User user, Integer userId);
+
+    User info(Integer loginId);
 }

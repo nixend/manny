@@ -30,8 +30,14 @@
     <dubbo:protocol name="dubbo" port="-1"/>
 
     <bean id="userService" class="com.nixend.manny.demo.client.service.impl.UserServiceImpl"/>
+    <bean id="loginService" class="com.nixend.manny.demo.client.service.impl.LoginServiceImpl"/>
+    <bean id="orderService" class="com.nixend.manny.demo.client.service.impl.OrderServiceImpl"/>
 
     <dubbo:service interface="com.nixend.manny.demo.client.service.UserService" timeout="3000" ref="userService"
+                   registry="registry1"/>
+    <dubbo:service interface="com.nixend.manny.demo.client.service.LoginService" timeout="3000" ref="loginService"
+                   registry="registry1"/>
+    <dubbo:service interface="com.nixend.manny.demo.client.service.OrderService" timeout="3000" ref="orderService"
                    registry="registry1"/>
 
 </beans>

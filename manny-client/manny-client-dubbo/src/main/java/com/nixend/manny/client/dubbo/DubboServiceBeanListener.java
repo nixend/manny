@@ -79,13 +79,8 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
             if (AnnotatedElementUtils.hasAnnotation(method, RequestRoute.class)) {
                 RequestRoute route = AnnotatedElementUtils.getMergedAnnotation(method, RequestRoute.class);
                 if (Objects.nonNull(route)) {
-                    if (!StringUtils.hasLength(route.value())) {
-                        throw new IllegalArgumentException("Method path should not empty in Service: " + serviceBean.getInterface() + " method: " + method.getName());
-                    }
-                    if (Constants.SLASH.equals(route.value())) {
-                        throw new IllegalArgumentException("Method path is invalid in Service: " + serviceBean.getInterface() + " method: " + method.getName());
-                    }
-                    String path = PathUtils.clearPath(route.value());
+                    String clearedPath = PathUtils.clearPath(route.value());
+                    String path = clearedPath.length() == 0 ? Constants.DEFAULT_INDEX : clearedPath;
                     MethodParam parameters = MethodParam.parse(method);
                     MethodData methodData = MethodData.builder()
                             .id(path)

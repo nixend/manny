@@ -27,7 +27,6 @@ public class MannyConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> routerFunction(final RouterDispatcherHandler handler) {
-        System.out.println("fuck");
         return RouterFunctions.route(RequestPredicates.all(), handler::handle);
     }
 

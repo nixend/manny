@@ -38,4 +38,19 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         return user;
     }
+
+    @Override
+    @PostRoute("/createById")
+    public User createById(User user, Integer userId) {
+        user.setId(userId);
+        return user;
+    }
+
+    @Override
+    @GetRoute("/info")
+    public User info(Integer loginId) {
+        User user = new User();
+        user.setId(loginId);
+        return user;
+    }
 }

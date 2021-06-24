@@ -16,6 +16,13 @@ public class PathUtils {
     /**
      * orders
      * v1/order/detail/89iu/ko
+     * order/create
+     * v1/order/create
+     * v1/order /index
+     * <p>
+     * v1/login/index   ->  v1/login/index
+     * v1/login         ->  v1/login/index
+     * login            ->  v1/login/index
      *
      * @param path
      * @return
@@ -24,23 +31,51 @@ public class PathUtils {
         if (!StringUtils.hasLength(path)) {
             return null;
         }
-        if (path.startsWith(Constants.SLASH)) {
-            path = path.substring(1);
-        }
-        if (path.endsWith(Constants.SLASH)) {
-            path = path.substring(0, path.length() - 1);
-        }
-        String[] slices = path.split(Constants.SLASH);
-        if (slices.length <= 2) {
+        path = clearPath(path);
+        String[] pathList = path.split(Constants.SLASH);
+        int pathLen = pathList.length;
+        if (pathLen == 0) {
             return null;
+        }
+
+        Pattern pattern = Pattern.compile(Constants.VERSION_REGX);
+        Matcher matcher = pattern.matcher(pathList[0]);
+        boolean hasVersion = matcher.find();
+
+        if (pathLen == 1) {
+            if (hasVersion) {
+                return null;
+            }
+            PathInfo pathInfo = new PathInfo();
+            String version = Constants.DEFAULT_VERSION;
+            pathInfo.setServiceId(String.join(Constants.SLASH, version, pathList[0]));
+            pathInfo.setMethodId(Constants.DEFAULT_INDEX);
+            return pathInfo;
+        } else if (pathLen == 2) {
+            PathInfo pathInfo = new PathInfo();
+            if (hasVersion) {
+                String serviceId = String.join(Constants.SLASH, pathList[0], pathList[1]);
+                pathInfo.setServiceId(serviceId);
+                pathInfo.setMethodId(Constants.DEFAULT_INDEX);
+            } else {
+                String serviceId = String.join(Constants.SLASH, Constants.DEFAULT_VERSION, pathList[0]);
+                pathInfo.setServiceId(serviceId);
+                pathInfo.setMethodId(pathList[1]);
+            }
+            return pathInfo;
         } else {
             PathInfo pathInfo = new PathInfo();
-            Pattern pattern = Pattern.compile(Constants.VERSION_REGX);
-            Matcher matcher = pattern.matcher(slices[0]);
-            String version = matcher.find() ? slices[0] : Constants.DEFAULT_VERSION;
-            pathInfo.setServiceId(String.join(Constants.SLASH, version, slices[1]));
-            String methodId = Arrays.stream(slices).skip(2).collect(Collectors.joining(Constants.SLASH));
-            pathInfo.setMethodId(methodId);
+            if (hasVersion) {
+                String version = pathList[0];
+                pathInfo.setServiceId(String.join(Constants.SLASH, version, pathList[1]));
+                String methodId = Arrays.stream(pathList).skip(2).collect(Collectors.joining(Constants.SLASH));
+                pathInfo.setMethodId(methodId);
+            } else {
+                String version = Constants.DEFAULT_VERSION;
+                pathInfo.setServiceId(String.join(Constants.SLASH, version, pathList[0]));
+                String methodId = Arrays.stream(pathList).skip(1).collect(Collectors.joining(Constants.SLASH));
+                pathInfo.setMethodId(methodId);
+            }
             return pathInfo;
         }
     }
@@ -63,5 +98,33 @@ public class PathUtils {
             str = str.substring(0, str.length() - 1);
         }
         return str;
+    }
+
+    public static boolean isPattern(String path) {
+        if (path == null) {
+            return false;
+        }
+        return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
+    }
+
+    /**
+     * @param pattern
+     * @param path
+     * @return
+     */
+    public static boolean match(String pattern, String path) {
+        if (!StringUtils.hasLength(path)) {
+            return false;
+        }
+        int index = pattern.indexOf("*");
+        if (index == 0) {
+            return true;
+        }
+        if (index > path.length()) {
+            return false;
+        }
+        index = index - 1;
+        String sub = path.substring(0, index);
+        return sub.equals(pattern.substring(0, index));
     }
 }
