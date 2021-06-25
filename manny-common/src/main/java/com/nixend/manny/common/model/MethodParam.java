@@ -1,6 +1,6 @@
 package com.nixend.manny.common.model;
 
-import com.nixend.manny.common.auth.Identity;
+import com.nixend.manny.common.annotation.Identity;
 import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.enums.ParamAnnotation;
 import com.nixend.manny.common.utils.StringUtils;

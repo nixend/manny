@@ -15,12 +15,13 @@
     <modules>
         <module>manny-common</module>
         <module>manny-core</module>
-        <module>manny-client</module>
-        <module>manny-server</module>
         <module>manny-demo</module>
-        <module>manny-register</module>
         <module>manny-remoting</module>
         <module>manny-plugin</module>
+        <module>manny-rpc</module>
+        <module>manny-provider</module>
+        <module>manny-registry</module>
+        <module>manny-configcenter</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

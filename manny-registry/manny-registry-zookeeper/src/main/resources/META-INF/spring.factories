@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.nixend.manny.registry.zookeeper.configuration.ZookeeperRegistryConfigure

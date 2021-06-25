@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>manny-demo</artifactId>
+    <artifactId>manny-rpc</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>manny-demo-dubbo</module>
-        <module>manny-demo-bootstrap</module>
+        <module>manny-rpc-dubbo</module>
     </modules>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

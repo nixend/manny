@@ -1,3 +1,0 @@
-# Auto configuration
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.nixend.manny.core.configuration.MannyConfiguration
