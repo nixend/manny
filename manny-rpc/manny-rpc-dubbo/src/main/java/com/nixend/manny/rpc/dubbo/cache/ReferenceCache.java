@@ -4,8 +4,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.Weigher;
+import com.nixend.manny.common.exception.MannyException;
 import com.nixend.manny.common.model.RouteData;
-import com.nixend.manny.core.exception.MannyException;
+import com.nixend.manny.common.model.ServiceData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.ApplicationConfig;
@@ -30,7 +31,7 @@ public class ReferenceCache {
 
     private final int maxCount = 10000;
 
-    private final Integer DEFAULT_TIMEOUT = 5;
+    private final Integer DEFAULT_TIMEOUT = 5000;
 
     private static volatile ReferenceCache instance;
 
@@ -101,13 +102,17 @@ public class ReferenceCache {
 
     private ReferenceConfig<GenericService> initReference(final RouteData routeData) {
 
+        ServiceData serviceData = routeData.getService();
+
         ApplicationModel.getConfigManager().setApplication(applicationConfig);
         ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
-        reference.setInterface(routeData.getService().getName());
+        reference.setInterface(serviceData.getName());
         reference.setGeneric("true");
-        reference.setRegistry(getRegistryConfig(routeData.getService().getRegistryAddress()));
+        reference.setRegistry(getRegistryConfig(serviceData.getRegistryAddress()));
         reference.setProtocol("dubbo");
-        reference.setTimeout(DEFAULT_TIMEOUT);
+        int timeout = 1000 * serviceData.getTimeout();
+        reference.setTimeout(timeout);
+        reference.setRetries(serviceData.getRetry());
         try {
             Object obj = reference.get();
             if (obj != null) {

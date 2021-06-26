@@ -25,11 +25,11 @@ public class DefaultGlobalExceptionHandler implements ErrorWebExceptionHandler {
     }
 
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable exception) {
         DataBufferFactory bufferFactory = exchange.getResponse().bufferFactory();
         ServerHttpResponse response = exchange.getResponse();
-        throwable.printStackTrace();
-        Object result = responseBuilder.error(throwable);
+        //throwable.printStackTrace();
+        Object result = responseBuilder.error(exception);
         String res = JSON.toJSONString(result);
         DataBuffer dataBuffer = bufferFactory.wrap(res.getBytes());
         response.setStatusCode(HttpStatus.OK);

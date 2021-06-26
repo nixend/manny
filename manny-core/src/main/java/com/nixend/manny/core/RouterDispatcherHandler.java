@@ -1,10 +1,15 @@
 package com.nixend.manny.core;
 
+import com.nixend.manny.common.enums.ResponseCode;
+import com.nixend.manny.common.exception.MannyCodeException;
+import com.nixend.manny.core.response.ResponseBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -25,6 +30,12 @@ public class RouterDispatcherHandler implements HandlerFunction<ServerResponse>,
 
     private List<RouterHandlerMapping> handlerMappings;
 
+    private ResponseBuilder responseBuilder;
+
+    public RouterDispatcherHandler(final ResponseBuilder responseBuilder) {
+        this.responseBuilder = responseBuilder;
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.initStrategies(applicationContext);
@@ -42,7 +53,19 @@ public class RouterDispatcherHandler implements HandlerFunction<ServerResponse>,
         return Flux.fromIterable(handlerMappings)
                 .concatMap((mapping) -> mapping.getHandler(exchange))
                 .next()
-                .flatMap((handler) -> handler.handle(exchange));
+                .flatMap((handler) -> handler.handle(exchange))
+                .switchIfEmpty(noResult())
+                .flatMap(result -> okJson(responseBuilder.success(result)));
     }
 
+    private Mono<ServerResponse> okJson(Object result) {
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(result));
+    }
+
+    private <R> Mono<R> noResult() {
+        return Mono.defer(() -> {
+            Exception ex = new MannyCodeException(ResponseCode.DUBBO_EMPTY);
+            return Mono.error(ex);
+        });
+    }
 }

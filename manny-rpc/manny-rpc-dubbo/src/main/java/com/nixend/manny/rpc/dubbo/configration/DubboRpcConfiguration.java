@@ -11,7 +11,6 @@ import com.nixend.manny.rpc.dubbo.DubboParamResolveService;
 import com.nixend.manny.rpc.dubbo.DubboRouterHandler;
 import com.nixend.manny.rpc.dubbo.DubboRouterHandlerMapping;
 import com.nixend.manny.rpc.dubbo.listener.DubboRouteConfigListener;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.SearchStrategy;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +27,15 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class DubboRpcConfiguration {
 
     @Bean
-    public RouterDispatcherHandler dispatcherHandler() {
-        return new RouterDispatcherHandler();
+    @ConditionalOnMissingBean(value = ResponseBuilder.class, search = SearchStrategy.ALL)
+    public ResponseBuilder responseBuilder() {
+        return new DefaultResponseBuilder();
+    }
+
+
+    @Bean
+    public RouterDispatcherHandler dispatcherHandler(final ResponseBuilder responseBuilder) {
+        return new RouterDispatcherHandler(responseBuilder);
     }
 
     @Bean
@@ -43,12 +49,6 @@ public class DubboRpcConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(value = ResponseBuilder.class, search = SearchStrategy.ALL)
-    public ResponseBuilder responseBuilder() {
-        return new DefaultResponseBuilder();
-    }
-
-    @Bean
     public DefaultGlobalExceptionHandler globalErrorWebExceptionHandler(final ResponseBuilder responseBuilder) {
         return new DefaultGlobalExceptionHandler(responseBuilder);
     }
@@ -59,8 +59,8 @@ public class DubboRpcConfiguration {
     }
 
     @Bean
-    public DubboRouterHandler routerHandler(final ParamResolveService resolveService, final ObjectProvider<ResponseBuilder> responseBuilder) {
-        return new DubboRouterHandler(resolveService, responseBuilder.getIfAvailable());
+    public DubboRouterHandler routerHandler(final ParamResolveService resolveService) {
+        return new DubboRouterHandler(resolveService);
     }
 
     @Bean

@@ -1,0 +1,2 @@
+mannyGenericFilter=com.nixend.manny.provider.dubbo.MannyGenericFilter
+mannyExceptionFilter=com.nixend.manny.provider.dubbo.MannyExceptionFilter

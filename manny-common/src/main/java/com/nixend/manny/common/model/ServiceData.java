@@ -21,4 +21,6 @@ public class ServiceData implements Serializable {
     private String version;
     private String rpcType;
     private String registryAddress;
+    private Integer retry;
+    private Integer timeout;
 }

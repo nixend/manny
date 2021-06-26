@@ -1,6 +1,7 @@
 package com.nixend.manny.core.response;
 
-import com.nixend.manny.core.exception.MannyException;
+import com.nixend.manny.common.exception.MannyCodeException;
+import com.nixend.manny.common.exception.MannyException;
 
 /**
  * @author panyox
@@ -13,11 +14,14 @@ public class DefaultResponseBuilder implements ResponseBuilder<DefaultResponseEn
     }
 
     @Override
-    public DefaultResponseEntity error(Throwable throwable) {
-        if (throwable instanceof MannyException) {
-            MannyException exception = (MannyException) throwable;
+    public DefaultResponseEntity error(Throwable ex) {
+        if (ex instanceof MannyException) {
+            MannyException exception = (MannyException) ex;
+            return DefaultResponseEntity.error(exception.getMessage());
+        } else if (ex instanceof MannyCodeException) {
+            MannyCodeException exception = (MannyCodeException) ex;
             return DefaultResponseEntity.error(exception.getCode(), exception.getMessage());
         }
-        return DefaultResponseEntity.error(throwable.getMessage());
+        return DefaultResponseEntity.error(500, "Inner Error");
     }
 }

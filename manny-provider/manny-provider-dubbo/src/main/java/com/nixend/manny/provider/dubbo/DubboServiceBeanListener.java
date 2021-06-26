@@ -73,6 +73,8 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
                 .name(serviceBean.getInterface())
                 .rpcType(RpcType.DUBBO.getName())
                 .registryAddress(registryConfig.getAddress())
+                .retry(requestRoute.retry())
+                .timeout(requestRoute.timeout())
                 .build();
         Method[] methods = ReflectionUtils.getUniqueDeclaredMethods(clazz);
         for (Method method : methods) {

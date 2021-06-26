@@ -26,8 +26,8 @@
     <dubbo:config-center address="zookeeper://127.0.0.1:2181"/>
     <dubbo:metadata-report address="zookeeper://127.0.0.1:2181"/>
     <dubbo:registry id="registry1" address="zookeeper://127.0.0.1:2181"/>
-
     <dubbo:protocol name="dubbo" port="-1"/>
+    <dubbo:provider filter="mannyExceptionFilter,-exception"/>
 
     <bean id="userService" class="com.nixend.manny.demo.dubbo.service.impl.UserServiceImpl"/>
     <bean id="loginService" class="com.nixend.manny.demo.dubbo.service.impl.LoginServiceImpl"/>

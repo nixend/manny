@@ -1,4 +1,4 @@
-package com.nixend.manny.core.response;
+package com.nixend.manny.common.enums;
 
 /**
  * @author panyox
@@ -8,7 +8,7 @@ public enum ResponseCode {
     INNER_ERROR(500, "Inner Server Error"),
     SERVICE_NOT_FOUND(100, "Service not found"),
     METHOD_NOT_FOUND(101, "Method not found"),
-    INVOKE_ERROR(102, "Invoke error"),
+    DUBBO_EMPTY(102, "Dubbo has no result"),
     ROUTE_NOT_MATCH(103, "Route not matching, check out your url");
 
     private int code;

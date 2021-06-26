@@ -19,4 +19,19 @@ public @interface RequestRoute {
     boolean enable() default true;
 
     HttpMethod method() default HttpMethod.GET;
+
+    /**
+     * retry times
+     *
+     * @return
+     */
+    int retry() default 3;
+
+    /**
+     * Call Dubbo service timeout, unit: Second
+     *
+     * @return
+     */
+    int timeout() default 5;
+
 }
