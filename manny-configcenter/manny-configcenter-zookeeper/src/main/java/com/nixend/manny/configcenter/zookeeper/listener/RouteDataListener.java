@@ -1,10 +1,10 @@
-package com.nixend.manny.configcenter.zookeeper;
+package com.nixend.manny.configcenter.zookeeper.listener;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.nixend.manny.common.model.RouteData;
-import com.nixend.manny.configcenter.api.ConfigListener;
 import com.nixend.manny.configcenter.api.DataEvent;
+import com.nixend.manny.configcenter.api.notify.RouteNotify;
 import com.nixend.manny.remoting.zookeeper.DataListener;
 import com.nixend.manny.remoting.zookeeper.EventType;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RouteDataListener implements DataListener {
 
-    private ConfigListener notify;
+    private RouteNotify notify;
 
     public RouteDataListener() {
     }
 
-    public RouteDataListener(final ConfigListener notify) {
+    public RouteDataListener(final RouteNotify notify) {
         this.notify = notify;
     }
 
-    public void setListener(final ConfigListener notify) {
+    public void setListener(final RouteNotify notify) {
         this.notify = notify;
     }
 
@@ -34,13 +34,13 @@ public class RouteDataListener implements DataListener {
             RouteData routeData = JSON.parseObject((String) data, RouteData.class);
             switch (eventType) {
                 case NodeCreated:
-                    notify.dataChanged(routeData, DataEvent.CREATED);
+                    notify.onSubscribe(routeData, DataEvent.CREATED);
                     break;
                 case NodeDataChanged:
-                    notify.dataChanged(routeData, DataEvent.UPDATE);
+                    notify.onSubscribe(routeData, DataEvent.UPDATE);
                     break;
                 case NodeDeleted:
-                    notify.dataChanged(routeData, DataEvent.DELETE);
+                    notify.onSubscribe(routeData, DataEvent.DELETE);
                     break;
             }
         } catch (JSONException ex) {

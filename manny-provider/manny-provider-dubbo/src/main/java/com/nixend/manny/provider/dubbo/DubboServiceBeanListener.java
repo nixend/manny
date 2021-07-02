@@ -12,6 +12,7 @@ import com.nixend.manny.common.utils.StringUtils;
 import com.nixend.manny.core.annotation.RequestRoute;
 import com.nixend.manny.registry.api.RegistryService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.common.URL;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.spring.ServiceBean;
 import org.springframework.context.ApplicationListener;
@@ -20,6 +21,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,7 +54,6 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
     private void processServiceBean(final ServiceBean serviceBean) {
         Class<?> clazz = serviceBean.getRef().getClass();
         RequestRoute requestRoute = clazz.getAnnotation(RequestRoute.class);
-        log.info("class: {} rr: {}", clazz, requestRoute);
         if (requestRoute == null) {
             return;
         }
@@ -64,6 +65,7 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
         if (!PathUtils.checkVersion(version)) {
             throw new IllegalArgumentException("RequestRoute version is invalid in Service: " + serviceBean.getInterface());
         }
+
         RegistryConfig registryConfig = serviceBean.getRegistry();
         String serviceId = servicePath.startsWith(Constants.SLASH) ? String.format("%s%s", version, servicePath) : String.format("%s/%s", version, servicePath);
         ServiceData serviceData = ServiceData.builder()
@@ -75,7 +77,14 @@ public class DubboServiceBeanListener implements ApplicationListener<ContextRefr
                 .registryAddress(registryConfig.getAddress())
                 .retry(requestRoute.retry())
                 .timeout(requestRoute.timeout())
+                .application(serviceBean.getApplication().getName())
                 .build();
+        List<URL> urls = serviceBean.getExportedUrls();
+        for (URL url : urls) {
+            serviceData.setAddress(url.getAddress());
+            registryService.registerProvider(serviceData);
+        }
+
         Method[] methods = ReflectionUtils.getUniqueDeclaredMethods(clazz);
         for (Method method : methods) {
             if (AnnotatedElementUtils.hasAnnotation(method, RequestRoute.class)) {

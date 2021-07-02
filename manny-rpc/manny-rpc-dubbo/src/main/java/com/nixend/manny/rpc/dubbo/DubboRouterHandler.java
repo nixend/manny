@@ -3,15 +3,18 @@ package com.nixend.manny.rpc.dubbo;
 import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.exception.MannyCodeException;
 import com.nixend.manny.common.exception.MannyException;
+import com.nixend.manny.common.model.DubboTag;
 import com.nixend.manny.common.model.RouteData;
 import com.nixend.manny.core.ParamResolveService;
 import com.nixend.manny.core.RouterHandler;
 import com.nixend.manny.rpc.dubbo.cache.ReferenceCache;
+import com.nixend.manny.rpc.dubbo.strategy.TagStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.utils.ReferenceConfigCache;
+import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.GenericException;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.web.server.ServerWebExchange;
@@ -43,7 +46,18 @@ public class DubboRouterHandler implements RouterHandler {
         } else {
             pair = paramResolveService.buildParameter(params, routeData.getMethod().getParameters());
         }
-        log.info("params: {} left: {} right: {}", params, pair.getLeft(), pair.getRight());
+        String tag = exchange.getRequest().getHeaders().getFirst(Constants.DUBBO_TAG_NAME);
+        if (!StringUtils.isEmpty(tag)) {
+            log.info("use spec tag: {}", tag);
+            RpcContext.getContext().setAttachment(Constants.DUBBO_TAG, tag);
+        } else {
+            DubboTag bestTag = TagStrategy.getInstance().matchBestTag(routeData.getService().getApplication());
+            log.info("use best tag: {}", bestTag);
+            if (null != bestTag) {
+                RpcContext.getContext().setAttachment(Constants.DUBBO_TAG, bestTag.getName());
+            }
+        }
+        log.info(" params: {} left: {} right: {}", params, pair.getLeft(), pair.getRight());
         CompletableFuture<Object> future = doInvoke(pair, routeData);
         return Mono.fromFuture(future.thenApply(res -> {
             //do something
@@ -70,4 +84,5 @@ public class DubboRouterHandler implements RouterHandler {
         GenericService service = ReferenceConfigCache.getCache().get(reference);
         return service.$invokeAsync(routeData.getMethod().getName(), pair.getLeft(), pair.getRight());
     }
+
 }

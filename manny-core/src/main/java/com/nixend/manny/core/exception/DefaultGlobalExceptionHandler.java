@@ -29,6 +29,7 @@ public class DefaultGlobalExceptionHandler implements ErrorWebExceptionHandler {
         DataBufferFactory bufferFactory = exchange.getResponse().bufferFactory();
         ServerHttpResponse response = exchange.getResponse();
         //throwable.printStackTrace();
+        exception.printStackTrace();
         Object result = responseBuilder.error(exception);
         String res = JSON.toJSONString(result);
         DataBuffer dataBuffer = bufferFactory.wrap(res.getBytes());

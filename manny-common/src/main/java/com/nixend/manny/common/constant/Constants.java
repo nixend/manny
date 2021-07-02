@@ -18,11 +18,11 @@ public interface Constants {
     String VERSION_REGX = "^v\\d*\\.?\\d*$";
     String AUTH_INFO = "authInfo";
     String EMPTY_JSON = "{}";
-    String LOGIN_ID = "loginId";
     String DEFAULT_INDEX = "index";
+    String DUBBO_TAG = "dubbo.tag";
+    String DUBBO_TAG_NAME = "DubboTag";
 
     String DUBBO_SERVICE_PATH = "/manny/dubbo/services";
-
-    String AN_ID = "@ID";
-    String AN_PA = "@PA";
+    String DUBBO_PROVIDERS_PATH = "/manny/dubbo/providers";
+    String DUBBO_TAG_PATH = "/manny/dubbo/tags";
 }

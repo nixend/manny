@@ -1,0 +1,8 @@
+server:
+  port: 8090
+#config center
+manny:
+  admin:
+    registry: 127.0.0.1:2181
+  dubbo:
+    registry: 127.0.0.1:2181

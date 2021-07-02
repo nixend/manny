@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>manny-plugin-auth</module>
-        <module>manny-plugin-sign</module>
     </modules>
 
     <properties>

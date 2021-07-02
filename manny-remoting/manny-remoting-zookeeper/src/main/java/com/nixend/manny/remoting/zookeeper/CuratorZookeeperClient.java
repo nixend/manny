@@ -29,11 +29,15 @@ public class CuratorZookeeperClient implements ZookeeperClient {
     protected static final Logger logger = LoggerFactory.getLogger(CuratorZookeeperClient.class);
 
     static final Charset CHARSET = StandardCharsets.UTF_8;
-    private final CuratorFramework client;
+    private CuratorFramework client = null;
     private static Map<String, TreeCache> treeCacheMap = new ConcurrentHashMap<>();
 
-    protected int DEFAULT_CONNECTION_TIMEOUT_MS = 5 * 1000;
-    protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
+    protected static int DEFAULT_CONNECTION_TIMEOUT_MS = 10 * 1000;
+    protected static int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
+
+    public CuratorZookeeperClient() {
+
+    }
 
     public CuratorZookeeperClient(ZookeeperConfig zookeeperConfig) {
         try {
@@ -54,6 +58,46 @@ public class CuratorZookeeperClient implements ZookeeperClient {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
+
+    public CuratorZookeeperClient(String address) {
+        try {
+            CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                    .connectString(address)
+                    .retryPolicy(new RetryNTimes(1, 1000))
+                    .connectionTimeoutMs(DEFAULT_CONNECTION_TIMEOUT_MS)
+                    .sessionTimeoutMs(DEFAULT_SESSION_TIMEOUT_MS);
+            client = builder.build();
+            client.start();
+            boolean connected = client.blockUntilConnected(DEFAULT_CONNECTION_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            if (!connected) {
+                throw new IllegalStateException("zookeeper not connected");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public void init(String address) {
+        try {
+            CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                    .connectString(address)
+                    .retryPolicy(new RetryNTimes(1, 1000))
+                    .connectionTimeoutMs(DEFAULT_CONNECTION_TIMEOUT_MS)
+                    .sessionTimeoutMs(DEFAULT_SESSION_TIMEOUT_MS);
+            client = builder.build();
+            client.start();
+            boolean connected = client.blockUntilConnected(DEFAULT_CONNECTION_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            if (!connected) {
+                throw new IllegalStateException("zookeeper not connected");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public CuratorFramework getClient() {
+        return client;
     }
 
     @Override

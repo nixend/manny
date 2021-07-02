@@ -1,6 +1,5 @@
 package com.nixend.manny.rpc.dubbo.configration;
 
-import com.nixend.manny.configcenter.api.ConfigListener;
 import com.nixend.manny.core.ParamResolveService;
 import com.nixend.manny.core.RouterDispatcherHandler;
 import com.nixend.manny.core.exception.DefaultGlobalExceptionHandler;
@@ -10,7 +9,8 @@ import com.nixend.manny.core.response.ResponseBuilder;
 import com.nixend.manny.rpc.dubbo.DubboParamResolveService;
 import com.nixend.manny.rpc.dubbo.DubboRouterHandler;
 import com.nixend.manny.rpc.dubbo.DubboRouterHandlerMapping;
-import com.nixend.manny.rpc.dubbo.listener.DubboRouteConfigListener;
+import com.nixend.manny.rpc.dubbo.listener.DubboRouteNotify;
+import com.nixend.manny.rpc.dubbo.listener.DubboTagRouteNotify;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.SearchStrategy;
 import org.springframework.context.annotation.Bean;
@@ -69,7 +69,12 @@ public class DubboRpcConfiguration {
     }
 
     @Bean
-    public ConfigListener configListener() {
-        return new DubboRouteConfigListener();
+    public DubboRouteNotify routeNotify() {
+        return new DubboRouteNotify();
+    }
+
+    @Bean
+    public DubboTagRouteNotify tagRouteNotify() {
+        return new DubboTagRouteNotify();
     }
 }

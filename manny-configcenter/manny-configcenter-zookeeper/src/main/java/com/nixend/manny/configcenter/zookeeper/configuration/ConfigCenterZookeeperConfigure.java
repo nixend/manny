@@ -2,9 +2,12 @@ package com.nixend.manny.configcenter.zookeeper.configuration;
 
 import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.model.ZookeeperConfig;
-import com.nixend.manny.configcenter.api.ConfigListener;
-import com.nixend.manny.configcenter.api.ConfigSubscriber;
-import com.nixend.manny.configcenter.zookeeper.ZookeeperConfigSubscriber;
+import com.nixend.manny.configcenter.api.notify.RouteNotify;
+import com.nixend.manny.configcenter.api.notify.TagRouteNotify;
+import com.nixend.manny.configcenter.api.subscriber.RouteSubscriber;
+import com.nixend.manny.configcenter.api.subscriber.TagRouteSubscriber;
+import com.nixend.manny.configcenter.zookeeper.ZookeeperRouteSubscriber;
+import com.nixend.manny.configcenter.zookeeper.ZookeeperTagRouteSubscriber;
 import com.nixend.manny.remoting.zookeeper.CuratorZookeeperClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,9 +32,17 @@ public class ConfigCenterZookeeperConfigure {
     }
 
     @Bean
-    public ConfigSubscriber configSubscriber(final CuratorZookeeperClient client, final ObjectProvider<ConfigListener> listener) {
-        ConfigSubscriber subscriber = new ZookeeperConfigSubscriber(client);
-        subscriber.subscribe(Constants.DUBBO_SERVICE_PATH, listener.getIfAvailable());
+    public RouteSubscriber routeSubscriber(final CuratorZookeeperClient client, final ObjectProvider<RouteNotify> notify) {
+        RouteSubscriber subscriber = new ZookeeperRouteSubscriber(client);
+        subscriber.subscribe(Constants.DUBBO_SERVICE_PATH, notify.getIfAvailable());
         return subscriber;
     }
+
+    @Bean
+    public TagRouteSubscriber tagRouteSubscriber(final CuratorZookeeperClient client, final ObjectProvider<TagRouteNotify> notify) {
+        TagRouteSubscriber subscriber = new ZookeeperTagRouteSubscriber(client);
+        subscriber.subscribe(Constants.DUBBO_TAG_PATH, notify.getIfAvailable());
+        return subscriber;
+    }
+
 }
