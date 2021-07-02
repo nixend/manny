@@ -1,18 +1,19 @@
 # Manny
-### Manny is a dubbo service router that can replace your dubbo consumer
+
+### Manny is a dubbo service gateway that can replace your dubbo consumer
 
 Features
 
-* Surport request: GET,POST,PUT,DELETE
+* Http method: GET,POST,PUT,DELETE
 * Base on spring webflux
-* Parameter check
-* Authorization support
+* Dubbo tag route
+* Authorization
 
 # Examples
 
 * Step1
 
-Start a dubbo service
+Start a dubbo provider service
 
 ```java
 public interface UserService {
@@ -25,6 +26,7 @@ public interface UserService {
 ```
 
 ```java
+
 @RequestRoute(value = "/user")
 public class UserServiceImpl implements UserService {
 
@@ -44,18 +46,19 @@ public class UserServiceImpl implements UserService {
 
 * Step2
 
-Start manny server
+Start a gateway bootstrap
 
 ```java
+
 @SpringBootApplication
-public class ServerApplication {
+public class BootstrapApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
     }
 }
 ```
 
-Then try http://localhost:port/user/hello
+Then just trying http://localhost:{port}/user/hello
 
 More detail see the manny-demo module
 
