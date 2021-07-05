@@ -7,14 +7,12 @@ import com.nixend.manny.common.exception.MannyException;
 import com.nixend.manny.core.RouterHandler;
 import com.nixend.manny.core.RouterHandlerMapping;
 import com.nixend.manny.core.match.MatchStrategy;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
  * @author panyox
  */
-@Slf4j
 public abstract class AbstractRouterHandlerMapping implements RouterHandlerMapping {
 
     @Override

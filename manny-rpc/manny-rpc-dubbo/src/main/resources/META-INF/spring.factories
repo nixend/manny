@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.nixend.manny.rpc.dubbo.configration.DubboRpcConfiguration

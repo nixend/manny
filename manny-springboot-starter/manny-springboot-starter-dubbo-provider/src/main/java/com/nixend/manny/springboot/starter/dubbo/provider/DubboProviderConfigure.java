@@ -1,4 +1,4 @@
-package com.nixend.manny.provider.dubbo.configuration;
+package com.nixend.manny.springboot.starter.dubbo.provider;
 
 import com.nixend.manny.provider.dubbo.DubboServiceBeanListener;
 import com.nixend.manny.registry.api.RegistryService;

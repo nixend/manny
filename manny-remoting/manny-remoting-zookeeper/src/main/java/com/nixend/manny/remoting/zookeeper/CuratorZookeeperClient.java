@@ -275,18 +275,20 @@ public class CuratorZookeeperClient implements ZookeeperClient {
         }
 
         @Override
-        public void childEvent(CuratorFramework client, TreeCacheEvent event) throws Exception {
+        public void childEvent(CuratorFramework client, TreeCacheEvent event) {
             ChildData data = event.getData();
-            switch (event.getType()) {
-                case NODE_ADDED:
-                    dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeCreated);
-                    break;
-                case NODE_UPDATED:
-                    dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeDataChanged);
-                    break;
-                case NODE_REMOVED:
-                    dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeDeleted);
-                    break;
+            if (data != null) {
+                switch (event.getType()) {
+                    case NODE_ADDED:
+                        dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeCreated);
+                        break;
+                    case NODE_UPDATED:
+                        dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeDataChanged);
+                        break;
+                    case NODE_REMOVED:
+                        dataListener.dataChanged(data.getPath(), new String(data.getData(), CHARSET), EventType.NodeDeleted);
+                        break;
+                }
             }
         }
     }

@@ -11,7 +11,6 @@ import com.nixend.manny.common.utils.PathUtils;
 import com.nixend.manny.common.utils.StringUtils;
 import com.nixend.manny.core.annotation.RequestRoute;
 import com.nixend.manny.registry.api.RegistryService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.spring.ServiceBean;
@@ -29,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author panyox
  */
-@Slf4j
 public class DubboServiceBeanListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private RegistryService registryService;

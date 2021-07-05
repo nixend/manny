@@ -6,13 +6,15 @@ import com.nixend.manny.common.model.RouteData;
 import com.nixend.manny.common.model.ServiceData;
 import com.nixend.manny.registry.api.RegistryService;
 import com.nixend.manny.remoting.zookeeper.CuratorZookeeperClient;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author panyox
  */
-@Slf4j
 public class ZookeeperRegistryService implements RegistryService {
+
+    private final static Logger logger = LoggerFactory.getLogger(ZookeeperRegistryService.class);
 
     private final CuratorZookeeperClient client;
 
@@ -35,9 +37,9 @@ public class ZookeeperRegistryService implements RegistryService {
         try {
             String path = buildPath(route);
             client.createPersistent(path, JSON.toJSONString(route));
-            log.info("zookeeper register route success! routeData: {}", route);
+            logger.info("zookeeper register route success! routeData: {}", route);
         } catch (Exception var) {
-            log.error("zookeeper register error {} ", var.getMessage());
+            logger.error("zookeeper register error {} ", var.getMessage());
         }
     }
 
@@ -46,9 +48,9 @@ public class ZookeeperRegistryService implements RegistryService {
         try {
             String path = buildPath(route);
             client.delete(path);
-            log.info("zookeeper remove route success! route: {}", route);
+            logger.info("zookeeper remove route success! route: {}", route);
         } catch (Exception var) {
-            log.error("zookeeper remove error {} ", var.getMessage());
+            logger.error("zookeeper remove error {} ", var.getMessage());
         }
     }
 
@@ -62,9 +64,9 @@ public class ZookeeperRegistryService implements RegistryService {
         try {
             String path = buildProviderPath(service);
             client.createPersistent(path, JSON.toJSONString(service));
-            log.info("zookeeper register provider success! {}", service);
+            logger.info("zookeeper register provider success! {}", service);
         } catch (Exception var) {
-            log.error("zookeeper register error {} ", var.getMessage());
+            logger.error("zookeeper register error {} ", var.getMessage());
         }
     }
 
@@ -73,9 +75,9 @@ public class ZookeeperRegistryService implements RegistryService {
         try {
             String path = buildProviderPath(service);
             client.delete(path);
-            log.info("zookeeper delete provider success! {}", service);
+            logger.info("zookeeper delete provider success! {}", service);
         } catch (Exception var) {
-            log.error("zookeeper delete error {} ", var.getMessage());
+            logger.error("zookeeper delete error {} ", var.getMessage());
         }
     }
 

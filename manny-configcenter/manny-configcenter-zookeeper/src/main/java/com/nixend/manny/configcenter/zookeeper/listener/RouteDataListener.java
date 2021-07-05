@@ -31,17 +31,20 @@ public class RouteDataListener implements DataListener {
     @Override
     public void dataChanged(String path, Object data, EventType eventType) {
         try {
-            RouteData routeData = JSON.parseObject((String) data, RouteData.class);
-            switch (eventType) {
-                case NodeCreated:
-                    notify.onSubscribe(routeData, DataEvent.CREATED);
-                    break;
-                case NodeDataChanged:
-                    notify.onSubscribe(routeData, DataEvent.UPDATE);
-                    break;
-                case NodeDeleted:
-                    notify.onSubscribe(routeData, DataEvent.DELETE);
-                    break;
+            String json = (String) data;
+            if (json.startsWith("{")) {
+                RouteData routeData = JSON.parseObject((String) data, RouteData.class);
+                switch (eventType) {
+                    case NodeCreated:
+                        notify.onSubscribe(routeData, DataEvent.CREATED);
+                        break;
+                    case NodeDataChanged:
+                        notify.onSubscribe(routeData, DataEvent.UPDATE);
+                        break;
+                    case NodeDeleted:
+                        notify.onSubscribe(routeData, DataEvent.DELETE);
+                        break;
+                }
             }
         } catch (JSONException ex) {
             log.error("parse route data error: {}", ex.getMessage());

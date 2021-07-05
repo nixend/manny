@@ -4,7 +4,6 @@ import com.nixend.manny.common.constant.Constants;
 import com.nixend.manny.common.exception.TokenExpiredException;
 import com.nixend.manny.common.exception.UnAuthException;
 import com.nixend.manny.common.utils.PathUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.filter.OrderedWebFilter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
@@ -18,7 +17,6 @@ import java.util.List;
 /**
  * @author panyox
  */
-@Slf4j
 public class AuthFilter implements OrderedWebFilter {
 
     private TokenResolver tokenResolver;

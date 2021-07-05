@@ -3,7 +3,6 @@ package com.nixend.manny.core;
 import com.nixend.manny.common.enums.ResponseCode;
 import com.nixend.manny.common.exception.MannyCodeException;
 import com.nixend.manny.core.response.ResponseBuilder;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +24,6 @@ import java.util.Map;
 /**
  * @author panyox
  */
-@Slf4j
 public class RouterDispatcherHandler implements HandlerFunction<ServerResponse>, ApplicationContextAware {
 
     private List<RouterHandlerMapping> handlerMappings;

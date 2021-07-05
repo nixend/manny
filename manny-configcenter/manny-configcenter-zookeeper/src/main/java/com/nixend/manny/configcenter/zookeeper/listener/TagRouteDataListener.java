@@ -22,17 +22,20 @@ public class TagRouteDataListener implements DataListener {
     @Override
     public void dataChanged(String path, Object data, EventType eventType) {
         try {
-            WeightTagRoute tagRoute = JSON.parseObject((String) data, WeightTagRoute.class);
-            switch (eventType) {
-                case NodeCreated:
-                    notify.onSubscribe(tagRoute, DataEvent.CREATED);
-                    break;
-                case NodeDataChanged:
-                    notify.onSubscribe(tagRoute, DataEvent.UPDATE);
-                    break;
-                case NodeDeleted:
-                    notify.onSubscribe(tagRoute, DataEvent.DELETE);
-                    break;
+            String json = (String) data;
+            if (json.startsWith("{")) {
+                WeightTagRoute tagRoute = JSON.parseObject((String) data, WeightTagRoute.class);
+                switch (eventType) {
+                    case NodeCreated:
+                        notify.onSubscribe(tagRoute, DataEvent.CREATED);
+                        break;
+                    case NodeDataChanged:
+                        notify.onSubscribe(tagRoute, DataEvent.UPDATE);
+                        break;
+                    case NodeDeleted:
+                        notify.onSubscribe(tagRoute, DataEvent.DELETE);
+                        break;
+                }
             }
         } catch (JSONException ex) {
             System.out.println("parse route data error " + ex.getMessage());

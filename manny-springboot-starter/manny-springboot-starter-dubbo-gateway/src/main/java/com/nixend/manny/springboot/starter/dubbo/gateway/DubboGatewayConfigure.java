@@ -1,4 +1,4 @@
-package com.nixend.manny.rpc.dubbo.configration;
+package com.nixend.manny.springboot.starter.dubbo.gateway;
 
 import com.nixend.manny.core.ParamResolveService;
 import com.nixend.manny.core.RouterDispatcherHandler;
@@ -24,7 +24,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
  * @author panyox
  */
 @Configuration
-public class DubboRpcConfiguration {
+public class DubboGatewayConfigure {
 
     @Bean
     @ConditionalOnMissingBean(value = ResponseBuilder.class, search = SearchStrategy.ALL)

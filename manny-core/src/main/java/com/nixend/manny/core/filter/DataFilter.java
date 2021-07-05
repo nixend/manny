@@ -2,7 +2,6 @@ package com.nixend.manny.core.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.nixend.manny.common.constant.Constants;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.filter.OrderedWebFilter;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.HttpMessageReader;
@@ -20,7 +19,6 @@ import java.util.Map;
 /**
  * @author panyox
  */
-@Slf4j
 public class DataFilter implements OrderedWebFilter {
 
     private final List<HttpMessageReader<?>> messageReaders = HandlerStrategies.withDefaults().messageReaders();
