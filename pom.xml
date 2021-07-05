@@ -10,7 +10,7 @@
     <groupId>com.nixend</groupId>
     <artifactId>manny</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>manny-common</module>
