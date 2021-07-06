@@ -28,23 +28,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Router rule can be divided into two parts, When Condition and Then Condition <br>
- * When/Then Confition is expressed in a style of (KV) pair, the V part of the condition pair can contain multiple values (a list) <br>
- * The meaning of Rule: If a request matches When Condition, then use Then Condition to filter providers (only providers match Then Condition will be returned). <br>
- * The process of using Conditions to match consumers and providers is called `Filter`.
- * When Condition are used to filter ConsumersController, while Then Condition are used to filter ProvidersController.
- * RouteUtils performs like this: If a Consumer matches When Condition, then only return the ProvidersController matches Then Condition. This means RouteUtils should be applied to current Consumer and the providers returned are filtered by RouteUtils.<br>
- * <p>
- * An example of ConditionRoute Rule：<code>
- * key1 = value11,value12 & key2 = value21 & key2 != value22 => key3 = value3 & key4 = value41,vlaue42 & key5 !=value51
- * </code>。
- * The part before <code>=></code> is called When Condition, it's a KV pair; the follower part is Then Condition, also a KV pair. V part in KV can have more than one value, separated by ','<br><br>
- * <p>
- * Value object, thread safe.
- */
 public class RouteUtils {
-    
+
     @SuppressWarnings("unchecked")
     static RouteUtils EMPTY = new RouteUtils(Collections.EMPTY_MAP, Collections.EMPTY_MAP);
     private static Pattern ROUTE_PATTERN = Pattern.compile("([&!=,]*)\\s*([^&!=,\\s]+)");
@@ -54,7 +39,6 @@ public class RouteUtils {
     final Map<String, MatchPair> thenCondition;
     private volatile String tostring = null;
 
-    // FIXME
     private RouteUtils(Map<String, MatchPair> when, Map<String, MatchPair> then) {
         for (Entry<String, MatchPair> entry : when.entrySet()) {
             entry.getValue().freeze();
@@ -318,14 +302,7 @@ public class RouteUtils {
         return new RouteUtils(when, then);
     }
 
-    /**
-     * Replace with the new condition value.
-     *
-     * @param copy          Replace Base
-     * @param whenCondition WhenCondition to replace, if Base does not have an item, insert it directly.
-     * @param thenCondition ThenCondition to replace, if Base has no items, then insert directly.
-     * @return RouteUtils after replacement
-     */
+
     public static RouteUtils copyWithReplace(RouteUtils copy, Map<String, MatchPair> whenCondition, Map<String, MatchPair> thenCondition) {
         if (null == copy) {
             throw new NullPointerException("Argument copy is null!");
@@ -346,7 +323,6 @@ public class RouteUtils {
         return new RouteUtils(when, then);
     }
 
-    // TODO ToString out of the current list is out of order, should we sort?
     static void join(StringBuilder sb, Set<String> valueSet) {
         boolean isFirst = true;
         for (String s : valueSet) {
@@ -360,13 +336,7 @@ public class RouteUtils {
         }
     }
 
-    /**
-     * Whether the sample passed the conditions.
-     * <p>
-     * If there is a Key in the KV for the sample, there is a corresponding MatchPair, and Value does not pass through MatchPair; {@code false} is returned; otherwise, {@code true} is returned.
-     *
-     * @see MatchPair#pass(String)
-     */
+
     public static boolean matchCondition(Map<String, String> sample,
                                          Map<String, MatchPair> condition) {
         for (Entry<String, String> entry : sample.entrySet()) {
@@ -381,14 +351,12 @@ public class RouteUtils {
     }
 
 
-    // FIXME Remove such method calls
     public static String join(Set<String> valueSet) {
         StringBuilder sb = new StringBuilder(128);
         join(sb, valueSet);
         return sb.toString();
     }
 
-    // TODO At present, the multiple Key of Condition is in disorder. Should we sort it?
     public static void contidionToString(StringBuilder sb, Map<String, MatchPair> condition) {
         boolean isFirst = true;
         for (Entry<String, MatchPair> entry : condition.entrySet()) {
@@ -478,7 +446,6 @@ public class RouteUtils {
         return tostring = sb.toString();
     }
 
-    // Automatic generation with Eclipse
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -488,7 +455,6 @@ public class RouteUtils {
         return result;
     }
 
-    // Automatic generation with Eclipse
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -556,15 +522,6 @@ public class RouteUtils {
             return matches.contains(value) || unmatches.contains(value);
         }
 
-        /**
-         * Whether a given value is matched by the {@link MatchPair}.
-         * return {@code false}, if
-         * <ol>
-         * <li>value is in unmatches
-         * <li>matches is not null, but value is not in matches.
-         * </ol>
-         * otherwise, return<code>true</code>。
-         */
         public boolean pass(String sample) {
             if (unmatches.contains(sample)) return false;
             if (matches.isEmpty()) return true;

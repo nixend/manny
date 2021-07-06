@@ -22,16 +22,7 @@ public class ParamUtils {
         JSONObject bodyMap = JSON.parseObject(body);
         return new ImmutablePair<>(new String[]{parameterTypes}, new Object[]{bodyMap});
     }
-
-    /**
-     * order@ID-userId@PA
-     *
-     * @param body
-     * @param paramName
-     * @param paramType
-     * @param authInfo
-     * @return
-     */
+    
     public static Pair<String[], Object[]> buildSingleParameter(final String body, final String paramName, final String paramType, final Object authInfo) {
         Object val = null;
         if (hasIdentityAnnotation(paramName)) {
@@ -51,11 +42,6 @@ public class ParamUtils {
         return new ImmutablePair<>(new String[]{paramType}, new Object[]{val});
     }
 
-    /**
-     * @param body
-     * @param methodParam
-     * @return
-     */
     public static Pair<String[], Object[]> buildParameters(final String body, final MethodParam methodParam) {
         if (Objects.isNull(body) || Objects.isNull(methodParam)) {
             return new ImmutablePair<>(new String[]{}, new Object[]{});

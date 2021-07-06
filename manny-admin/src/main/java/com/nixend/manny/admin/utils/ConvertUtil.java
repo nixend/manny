@@ -58,12 +58,6 @@ public class ConvertUtil {
                 .append(COLON).append(null2EmptyString(baseDTO.getServiceGroup())).toString();
     }
 
-    /**
-     * Detach interface class, version and group from id.
-     *
-     * @param id
-     * @return java.lang.String[] 0: interface class; 1: version; 2: group
-     */
     public static String[] detachId(String id) {
         if (id.contains(COLON)) {
             return id.split(COLON);

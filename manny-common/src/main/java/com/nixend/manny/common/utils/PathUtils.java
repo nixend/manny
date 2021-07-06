@@ -13,15 +13,6 @@ import java.util.stream.Collectors;
  */
 public class PathUtils {
 
-    /**
-     * eg.
-     * v1/login/index   ->  v1/login/index
-     * v1/login         ->  v1/login/index
-     * login            ->  v1/login/index
-     *
-     * @param path
-     * @return
-     */
     public static PathInfo parse(String path) {
         if (!StringUtils.hasLength(path)) {
             return null;
@@ -102,11 +93,7 @@ public class PathUtils {
         return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
     }
 
-    /**
-     * @param pattern
-     * @param path
-     * @return
-     */
+
     public static boolean match(String pattern, String path) {
         if (!StringUtils.hasLength(path)) {
             return false;
